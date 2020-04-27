@@ -1,0 +1,30 @@
+Dear Reader,
+
+you downloaded the current snapshot of yab from SourceForge.
+This repository is meant for development, potential users are 
+asked to wait for the stable releases. If this does not frighten
+you, please take a tour through our repository:
+
+src: Here you will find the sources to the interpreter itself.
+Read the instructions in src/README.Compile on how to compile
+your own version.
+
+BuildFactory: This is the current build factory that allows you
+to compile stand alone yab applications. Use buildfactory.yab
+to do so.
+
+documentation: All documents related to yab should be here 
+but, alas, some are always missing.
+
+examples: Several yab examples help you on your first
+steps in yab and to get going.
+
+yab-IDE: The IDE written in yab itself to show the power
+of yab. To run the IDE, start it, close it and then change
+the default paths in: ~/config/settings/yab-ide/ide-settings
+
+That said, have fun.
+
+Yours
+
+Jan
