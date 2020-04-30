@@ -1,0 +1,28 @@
+window open 100,100 to 500,400, "Test", "Test"
+
+columnbox 10,10 to 290,290, "Column", true, "resizable", "Test"
+columnbox column "Column", "Hallo", 1, 150,50,100, "align-left"
+columnbox column "Column", "Welt", 2, 150,50,100, "align-left"
+columnbox add "Column", 1,1, 20, "Schoener"
+columnbox add "Column", 2,1, 20, "Tag"
+
+button 320,100 to 380,150, "Button", "blub", "Test"
+
+dim mouseMsg$(1)
+while(not instr(message$, "Quit"))
+	mouse$ = mouse message$
+	print mouse$
+
+	num = token(mouse$, mouseMsg$(), ":")
+
+	if(num > 5) then
+		// erst den Namen und die rechte Maustaste ueberpruefen
+		if(mouseMsg$(1) = "Column" and mouseMsg$(6) = "1") then
+			x = val(mouseMsg$(2))
+			y = val(mouseMsg$(3))
+			auswahl$ = popupmenu x,y, "Hallo|--|Welt", "Test"
+		endif
+	endif
+wend
+
+window close "Test"

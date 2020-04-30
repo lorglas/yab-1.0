@@ -1,0 +1,24 @@
+Compiling instruction
+---------------------
+
+To compile yab, use the one of the following commands:
+
+for BeOS R5:
+	First load and compile the project in CalendarControl-2.5/Source. You will need BeIDE for that which is in the Developer Tools
+	copy the file (Objects.CalendarControl)/CalendarControl.o to the source folder
+	make -f Makefile.R5 
+
+for ZETA:
+	make -f Makefile.ZETA
+
+The version differences are:
+- yab compiled on R5 is runnable on BeOS R5, Haiku, all ZETA versions
+  It does not support ZETA localization and has the Haiku TABVIEW-look
+
+- yab compiled on ZETA with the Makefile.R5 is runnable on all ZETA versions
+  It does not support ZETA localization and has the Haiku TABVIEW-look
+
+- yab compiled on ZETA with Makefile.ZETA is runnable ONLY on the specific ZETA version (either 1.0/1.1 or 1.2)
+  It supports ZETA localization and has the ZETA TABVIEW-look
+
+A generic ZETA Makefile with Haiku TABVIEW-look that runs on all ZETA versions will be added soon.

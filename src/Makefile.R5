@@ -1,0 +1,134 @@
+##
+## yab BeOS R5 Makefile
+##
+## (c) Jan Bungeroth 2006 
+## Artistic License. 
+##
+## Use 
+##   make -f Makefile.R5
+## to compile yab for R5.
+##
+## Needs a valid installation of at least: gcc, flex, bison, perl, ncurses
+##
+## (For ZETA see Makefile.ZETA.)
+##
+## Note: This version compiled on ZETA will _not_ feature ZETA tabview, 
+## ZETA tooltips and ZETA localization support. However, compiled on ZETA
+## it will not run on R5.
+##
+
+##
+## R5 stuff
+##
+HAIKUTAB = YabTabView.o
+BUBBLE = BubbleHelper.o
+
+##
+## Use our own column list view
+## 
+COLUMN = column/ColumnListView.o
+
+##
+## enable debug
+##
+## DBG = -g 
+# 
+
+##
+## enable optimization
+##
+OPT = -O
+#
+
+##
+## GCC Options
+##
+GCC = gcc
+GCC_OPT = $(DBG) $(OPT) -I. -I/boot/home/config/include/ -I/boot/home/config/include/ncurses/ -DHAVE_CONFIG -DUNIX
+GPP = g++
+GPP_OPT = $(DBG) $(OPT) -I. -DHAVE_CONFIG -DUNIX 
+
+##
+## Libraries
+##
+LIBPATH = -L/boot/home/config/lib  
+#-L/boot/home/yab/CalendarControl.a
+LIB = -lncurses -lbe -lroot -ltranslation -ltracker -lmedia $(ZETALIB)
+
+## flags for flex (-d for debugging)
+FLEXFLAGS = -i -I -L -s
+
+## flags for bison (-t -v for debugging)
+BISONFLAGS = -d -l -t -v  
+
+##
+## Compile and link
+##
+yab: global.h YabMain.o YabInterface.o YabWindow.o YabView.o YabBitmapView.o YabFilePanel.o YabFilePanelLooper.o YabList.o \
+	YabText.o $(BUBBLE) flex.o bison.o symbol.o function.o graphic.o io.o main.o $(COLUMN) column/YabColumnType.o column/ColorTools.o YabStackView.o SplitPane.o URLView.o \
+	$(HAIKUTAB) Spinner.o column/ColumnListView.o CalendarControl-R5.a
+	$(GPP) $(GPP_OPT) -o yab YabMain.o YabInterface.o YabWindow.o YabView.o YabBitmapView.o YabText.o YabFilePanel.o \
+		YabFilePanelLooper.o $(BUBBLE) YabList.o main.o function.o io.o graphic.o symbol.o bison.o flex.o  $(COLUMN) column/YabColumnType.o column/ColorTools.o \
+		YabStackView.o SplitPane.o URLView.o $(HAIKUTAB) Spinner.o $(TABLIB) CalendarControl-R5.a \
+		$(LIBPATH) $(LIB)
+global.h: global_R5.h
+	cp global_R5.h global.h
+YabMain.o: YabMain.cpp 
+	$(GPP) $(GPP_OPT) -c YabMain.cpp -o YabMain.o
+YabInterface.o: YabInterface.cpp YabInterface.h global.h YabMenu.h
+	$(GPP) $(GPP_OPT) -c YabInterface.cpp -o YabInterface.o
+YabWindow.o: YabWindow.cpp YabWindow.h global.h
+	$(GPP) $(GPP_OPT) -c YabWindow.cpp -o YabWindow.o
+
+YabView.o: YabView.cpp YabView.h
+	$(GPP) $(GPP_OPT) -c YabView.cpp -o YabView.o
+YabBitmapView.o: YabBitmapView.cpp YabBitmapView.h
+	$(GPP) $(GPP_OPT) -c YabBitmapView.cpp -o YabBitmapView.o
+YabFilePanel.o: YabFilePanel.cpp YabFilePanel.h
+	$(GPP) $(GPP_OPT) -c YabFilePanel.cpp -o YabFilePanel.o
+YabFilePanelLooper.o: YabFilePanelLooper.cpp YabFilePanelLooper.h
+	$(GPP) $(GPP_OPT) -c YabFilePanelLooper.cpp -o YabFilePanelLooper.o
+BubbleHelper.o: BubbleHelper.cpp BubbleHelper.h
+	$(GPP) $(GPP_OPT) -c BubbleHelper.cpp -o BubbleHelper.o
+YabList.o: YabList.cpp YabList.h
+	$(GPP) $(GPP_OPT) -c YabList.cpp -o YabList.o
+YabText.o: YabText.cpp YabText.h
+	$(GPP) $(GPP_OPT) -c YabText.cpp -o YabText.o
+bison.o: bison.c yabasic.h config.h 
+	$(GCC) $(GCC_OPT) -c bison.c -o bison.o
+flex.o: flex.c bison.c yabasic.h config.h
+	$(GCC) $(GCC_OPT) -c flex.c -o flex.o
+function.o: function.c yabasic.h config.h
+	$(GCC) $(GCC_OPT) -c function.c -o function.o
+io.o: io.c yabasic.h config.h
+	$(GCC) $(GCC_OPT) -c io.c -o io.o
+graphic.o: graphic.c yabasic.h config.h
+	$(GCC) $(GCC_OPT) -c graphic.c -o graphic.o
+symbol.o: symbol.c yabasic.h config.h
+	$(GCC) $(GCC_OPT) -c symbol.c -o symbol.o
+main.o: main.c yabasic.h config.h 
+	$(GCC) $(GCC_OPT) -c main.c -o main.o
+flex.c: yabasic.flex Makefile.R5
+	flex $(FLEXFLAGS) -t yabasic.flex >flex.c
+	perl -i -n -e 'if (!/^\#include\s+<unistd.h>\s+$$/) {print if $$i;$$i++}' flex.c
+bison.c: yabasic.bison Makefile.R5
+	bison $(BISONFLAGS) --output-file bison.c yabasic.bison  
+YabStackView.o: YabStackView.cpp YabStackView.h
+	$(GCC) $(GCC_OPT) -c YabStackView.cpp -o YabStackView.o
+SplitPane.o: SplitPane.cpp SplitPane.h 
+	$(GCC) $(GCC_OPT) -c SplitPane.cpp -o SplitPane.o
+URLView.o: URLView.cpp URLView.h global.h
+	$(GCC) $(GCC_OPT) -c URLView.cpp -o URLView.o
+Spinner.o: Spinner.cpp Spinner.h global.h
+	$(GCC) $(GCC_OPT) -c Spinner.cpp -o Spinner.o
+column/ColumnListView.o: column/ColumnListView.cpp column/ColumnListView.h column/ObjectList.h 
+	$(GCC) $(GCC_OPT) -c column/ColumnListView.cpp -o column/ColumnListView.o
+column/ColorTools.o: column/ColorTools.cpp column/ColorTools.h 
+	$(GCC) $(GCC_OPT) -c column/ColorTools.cpp -o column/ColorTools.o
+column/YabColumnType.o: column/YabColumnType.cpp column/YabColumnType.h
+	$(GCC) $(GCC_OPT) -c column/YabColumnType.cpp -o column/YabColumnType.o
+$(HAIKUTAB): YabTabView.cpp YabTabView.h
+	$(GCC) $(GCC_OPT) -c YabTabView.cpp -o YabTabView.o
+
+clean:
+	rm -f core *.o column/*.o flex.* bison.* global.h yab

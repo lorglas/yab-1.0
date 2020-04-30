@@ -1,0 +1,9 @@
+window open 100,100 to 400,400, "A", "A"
+err = draw image 0,0, "/maui/home/oldExt2/capegoodhope-1024.jpg", "A"
+option color "A", "a", 100,100,244
+colorcontrol 10,10, "B", "A"
+
+while(not instr(message$, "Quit"))
+wend
+
+window close "A"
