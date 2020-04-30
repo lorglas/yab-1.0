@@ -1,0 +1,569 @@
+<HTML>
+ <HEAD>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+  <TITLE>Calendar Control</TITLE>
+ </HEAD>
+ <BODY BGCOLOR=white link="#2222AA">
+  <A NAME="CalendarControl"></A>
+  
+  <H1><FONT SIZE="+5"> Calendar Control</FONT></H1>
+  
+  <BLOCKQUOTE><FONT face=helvetica SIZE=+1><B>
+   Calendar Control, версия 2.5.<BR>
+   Автор Ал.В. Сариков.<BR>
+   Херсон, Украина, 2006 г.<BR>
+   E-mail: <A HREF="mailto:avix@ukrpost.net">avix@ukrpost.net</A>.<BR>
+   Сайт: <A HREF="http://avix.pp.ru" TARGET="_new">http://avix.pp.ru</A>.
+  </B></FONT>
+  
+   <P><FONT face=helvetica><b>Распространяется по лицензии BSD (см. файл LICENSE).</b></font>
+   </BLOCKQUOTE>
+  
+  <BLOCKQUOTE>
+   <FONT face=helvetica><b>Наследован от:</b></font>&nbsp;BControl
+   <br><FONT face=helvetica><b>Объявлен в:</b></font>&nbsp;CalendarControl.h
+   <br><FONT face=helvetica><b>Библиотека:</b></font>&nbsp;CalendarControl.a
+   <br><FONT face=helvetica><b>Функции:</b></font>&nbsp;
+   <A HREF="CalendarControl.summary.html"><i>далее...</i></A>
+   <br>
+   
+   <P>
+   <br>
+   
+   <P>Контрол календаря (Calendar Control) позволяет работать с датами: вводить дату в поле ввода контрола или выбирать дату из календаря. Внешний вид раскрытого контрола (с интерфейсом BeOS) показан на рисунке.
+   <P><IMG border SRC="CalendarControl.png" ALIGN="center">
+   <P><A NAME="DateRange"></A>Контрол работает с полной и краткой датой (год записывается полностью или только двумя последними цифами). В первом случае допустимыми являются даты от 1 января 0001 года до 31 декабря 9999 года. Во втором случае контрол принимает даты в пределах столетия, от 01 года столетия до 00 года или от 51 года столетия до 50 года следующего столетия (в зависимости от установленного в конструкторе флага <A HREF="#Century">начала столетия</A>). Нумерация месяцев идет с 1 (январь).
+   <P>Дата вводится в поле ввода как обычный текст (допускается ввод только цифр). Если дата введена некорректно (месяц больше 12, день больше 31 и т.д.), то она будет автоматически исправлена заменой всех неправильных значений на значения текущей системной даты.
+   <P>Допускается выделение текста в поле ввода, копирование значения поля ввода или его части в Clipboard, удаление символов (вместо удаленного символа появляется 0). Вставка текста в поле ввода запрещена, т.к. это могло бы привести к некорректности даты в контроле.
+   <P>Нажатие мышью на кнопку рядом с полем ввода даты (или нажатие на клавиатуре Ctrl+стрелка вниз) открывает календарь. Первоначально календарь содержит месяц и год, введенные в поле ввода. Введенный в поле ввода день на календаре заключается в синий прямоугольник.
+   <P>Если месяц и год совпадают с месяцем и годом системной даты, то сегодняшний день пишется красным цветом.
+   <P>Навигация по календарю осуществляется с помощью мыши или клавиатуры.
+   <P>Нажатием мышью на стрелки (значки "&lt&lt" и "&gt&gt") возле месяца пользователь изменяет месяц. Нажатием на стрелки возле года - год.
+   <P>Нажатие мышью на нижнюю строку с сегодняшней датой делает ее текущей в календаре (день, месяц, год). Окончательный выбор даты осуществляется нажатием мыши на нужном дне при установленном нужном годе и месяце. Выбранная дата помещается в поле ввода даты контрола.
+   <P>При навигации с помощью клавиатуры используются клавиши-стрелки (перемещают по дням месяца либо увеличивают и уменьшают месяц и год, в зависимости от фокуса), клавиши Tab или Shift+Tab (изменяют фокус в окне), Enter или пробел (делают сегодняшнюю дату текущей или окончательно выбирают дату, в зависимости от фокуса), ESC или Ctrl+стрелка вверх (закрывают окно без выбора даты).
+   <P>Снятие фокуса с календаря любым способом (нажатие мышью вне календаря, активизация другого окна какой-либо программы) приводит к его закрытию без помещения даты в поле ввода контрола.
+   <P><b>История версий</b>
+   <P><i>Версия 1.0:</i>
+   <ul>
+    <li>самая первая версия.
+   </ul>
+   <P><i>Версия 2.0:</i>
+   <ul>
+    <li>добавлена возможность работать с датами, в которых год записан двумя цифрами;
+    <li>добавлена клавиатурная навигация;
+    <li>исправлен ряд мелких и не очень ошибок (и, вероятно, добавлены новые :)), усовершенствовано отображение контрола;
+    <li>кроме русской и английской сделана французская версия контрола (по просьбе Eric Jourde, он же предоставил необходимые переводы и сокращения);
+    <li>изменен API: удалены функции GetFormat(), SetFormat(), вместо них добавлены <B><TT><A HREF="#GetFlags()">GetFlags()</A></TT></B>, <B><TT><A HREF="#SetFlags()">SetFlags()</A></TT></B>;
+    <li>добавлена функция <B><TT><A HREF="#SetDate()">SetDate()</A></TT></B>, принимающая как параметр текстовую строку.
+   </ul>
+   <P><i>Версия 2.1 (не была распространена):</i>
+   <ul>
+    <li>изменения в API: добавлена функция <B><TT><A HREF="#TextView()">TextView()</A></TT></B>;
+    <li>усовершенствовано отображение контрола: вид неактивного контрола сделан отличным от вида активного;
+    <li>исправлены ошибки в коде, могущие привести к неверному отображению некоторых частей контрола (спасибо Jan Bungeroth, указавшему на них);
+    <li>исправлены ошибки в работе с високосными годами (спасибо Jan Bungeroth, указавшему на них);
+    <li>в специальной редакции версии 2.1 были добавлены опции и код, при компиляции в Zeta изменяющие внешний вид контрола и добавляющие локализацию его системными средствами Zeta (вместо англоязычной версии; предложены и разработаны Jan Bungeroth).
+   </ul>
+   <P><i>Версия 2.5:</i>
+   <ul>
+    <li>разработан вариант интерфейса, приближенный к интерфейсу подобных контролов в Zeta;
+    <li>сделана возможность автоматической настройки интерфейса в зависимости от ОС, в которой запущена программа с контролом (задается параметрами при компиляции и флагами функции <B><TT><A HREF="#SetLook()">SetLook()</A></TT></B> при выполнении);
+    <li>включена (как вариант при компиляции) локализация системными средствами Zeta, реализованная в специальной редакции версии 2.1 (предложена и разработана Jan Bungeroth).
+    <li>эти изменения придали коду контрола форму, позволяющую создавать контролы с разными свойствами (внешним видом и языком интерфейса) в зависимости от параметров, заданных при компиляции (подробнее см. файл <A HREF="Compile.html">Compile.html</A>). Это привело к необходимости открыть код (чтобы не распространять все возможные варианты) и изменить лицензию, по которой распространяется контрол, на BSD (см. файл LICENSE);
+    <li>улучшены геометрические параметры контрола и окна с календарем;
+    <li>усовершенствована навигация в окне с календарем;
+   </ul>
+  </BLOCKQUOTE>
+  
+  <P>
+  <HR>
+  <H2><A NAME="Constructor"></A><FONT color="430000"><FONT SIZE=6>К</FONT>онструктор и <FONT SIZE=6>Д</FONT>еструктор</FONT></H2>
+  <A NAME="36000:_funcNameFirst:_CalendarControl()"></A>
+  
+  <HR>
+  
+  <TABLE><TR><TD><FONT size=+2><A NAME="CalendarControl()"></A>CalendarControl()</FONT></TABLE>
+  
+  <P>
+  <P>
+  <BLOCKQUOTE>
+<TABLE bgcolor="550033" width=1000 border="2">
+<TR><TD>
+<Table cellpadding =8 bgcolor="white" border width=1000> 
+<TR><TD>
+<B><TT><FONT size=+1>CalendarControl(</TT></B></FONT>BPoint <I><FONT  color=991122 face=HELVETICA>p</I></FONT>, 
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;const char *<I><FONT  color=991122 face=HELVETICA>name</I></FONT>,
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;int <I><FONT color=991122 face=HELVETICA>day</I></FONT>&nbsp;=&nbsp;<FONT face=HELVETICA>0</FONT>,
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;int <I><FONT color=991122 face=HELVETICA>month</I></FONT>&nbsp;=&nbsp;<FONT face=HELVETICA>0</FONT>,
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;int <I><FONT color=991122 face=HELVETICA>year</I></FONT>&nbsp;=&nbsp;<FONT face=HELVETICA>0</FONT>,
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;uint32 <I><FONT color=991122 face=HELVETICA>flags</I></FONT>&nbsp;=&nbsp;<B><TT>CC_DD_MM_YYYY_FORMAT | CC_FULL_YEAR</TT></B>,
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;uint32 <I><FONT color=991122 face=HELVETICA>look</I></FONT>&nbsp;=&nbsp;<B><TT>CC_DOT_DIVIDER | CC_AUTO_INTERFACE)</TT></B>
+</TABLE></TABLE>
+
+<P>Создает контрол календаря. Аргументы:
+<P>
+<UL>
+<LI><I><FONT  color=991122 face=HELVETICA>p</I></FONT> - верхний левый угол контрола в окне, к которому контрол будет присоединен. Размеры контрола устанавливаются автоматически.
+<P>
+<LI><I><FONT  color=991122 face=HELVETICA>name</I></FONT> - имя контрола. Может быть любым.
+<P>
+<LI><I><FONT  color=991122 face=HELVETICA>day, month, year</I></FONT> - день, месяц и год, которые будут установлены в поле ввода даты контрола. По умолчанию равны нулю, а значит, в контроле будет установлена текущая системная дата (см. <A HREF="#DateRange">допустимые значения даты</A>).
+<P>
+<LI><I><FONT color=991122 face=HELVETICA>flags</I></FONT> - параметры даты - комбинация констант, задающих <A HREF="#Formats">формат</A> даты в поле ввода контрола, количество цифр в <A HREF="#LongShortYear">представлении года</A> и (когда год записывается в кратком виде) флаг <A HREF="#Century">начала столетия</A>. Два последних флага устанавливаются только при создании контрола и в дальнейшем изменить их невозможно.
+<P>
+<LI><I><FONT  color=991122 face=HELVETICA>look</I></FONT> - параметры интерфейса - комбинация констант, задающих вид <A HREF="#Dividers">разделителя</A> между элементами даты в поле ввода даты и <A HREF="#Interface">интерфейс</A> (внешний вид) контрола. Флаг интерфейса устанавливается только при создании контрола и не может быть изменен позже. Его указание действительно только для контролов, откомпилированных с универсальным интерфейсом (см. <A HREF="Compile.html">Compile.html</A>). В других случаях флаг интерфейса устанавливается самим конструктором вне зависимости от заданного в параметре <I><FONT  color=991122 face=HELVETICA>look</I></FONT>.
+<P>
+</UL>
+<P>
+После создания контрола его следует присоединить к родителю (окну или BView) функцией AddChild() родителя.
+<P>
+
+</BLOCKQUOTE>
+
+<HR>
+
+<TABLE><TR><TD><FONT size=+2>
+
+<A NAME="~CalendarControl()"></A>~CalendarControl()
+</FONT></TABLE>
+<P>
+
+<P>
+
+<BLOCKQUOTE>
+<TABLE bgcolor="550033" width=1000 border="2">
+<TR><TD>
+<Table cellpadding =8 bgcolor="white" border width=1000> 
+<TR><TD>
+<B><TT><FONT size=+1>~CalendarControl()</TT></B></FONT>
+</TABLE></TABLE>
+
+<P>Удаляет динамически созданные переменные класса.
+
+<P>
+</BLOCKQUOTE>
+
+<HR>
+<H2>
+<A NAME="Member_Functions"></A><FONT color="430000"><FONT SIZE=6>Ф</FONT>ункции</FONT >
+</H2>
+<HR>
+
+<TABLE><TR>
+<TD><FONT size=+2>
+GetDate() &nbsp;см.&nbsp;<A HREF="#SetDate()">SetDate()</A></FONT>
+
+<TR><TD><FONT size=+2>
+GetFlags() &nbsp;см.&nbsp;<A HREF="#SetFlags()">SetFlags()</A></FONT>
+
+<TR><TD><FONT size=+2>
+GetLook() &nbsp;см.&nbsp;<A HREF="#SetLook()">SetLook()</A></FONT></TABLE>
+<P>
+
+<HR>
+
+<TABLE><TR><TD><FONT size=+2>
+
+<A NAME="GetYearRange()"></A>GetYearRange()
+</FONT></TABLE>
+<P>
+
+<P>
+
+<BLOCKQUOTE>
+<TABLE bgcolor="550033" width=1000 border="2">
+<TR><TD>
+<Table cellpadding =8 bgcolor="white" border width=1000> 
+<TR><TD>
+void <B><TT><FONT size=+1>GetYearRange(</TT></B></FONT>int *<I><FONT  color=991122 face=HELVETICA>first_year</I></FONT>, int *<I><FONT color=991122 face=HELVETICA>last_year</I></FONT><B><TT><FONT size=+1>)</TT></B></FONT>
+</TABLE></TABLE>
+
+<P>Возвращает в переменных <I><FONT color=991122 face=HELVETICA>first_year</I></FONT>, <I><FONT  color=991122 face=HELVETICA>last_year</I></FONT> первый и последний годы, допустимые для использования в контроле (см. <A HREF="#DateRange">допустимые значения даты</A>).
+
+<P>
+</BLOCKQUOTE>
+
+<HR>
+
+<TABLE><TR><TD><FONT size=+2>
+
+<A NAME="GetDate()"></A>GetDate()
+,
+<A NAME="SetDate()"></A>SetDate()
+</FONT></TABLE>
+<P>
+
+<P>
+
+<BLOCKQUOTE>
+<TABLE bgcolor="550033" width=1000 border="2">
+<TR><TD>
+<Table cellpadding =8 bgcolor="white" border width=1000> 
+<TR><TD>
+void <B><TT><FONT  size=+1>GetDate(</TT></B></FONT>int *<I><FONT  color=991122 face=HELVETICA>day</I></FONT>, int *<I><FONT color=991122 face=HELVETICA>month</I></FONT>, int *<I><FONT color=991122 face=HELVETICA>year</I></FONT><B><TT><FONT size=+1>)</TT></B></FONT>
+
+<TR><TD>
+void <B><TT><FONT  size=+1>SetDate(</TT></B></FONT>int <I><FONT  color=991122 face=HELVETICA>day</I></FONT>&nbsp;=&nbsp;<FONT face=HELVETICA>0</FONT>, int <I><FONT color=991122 face=HELVETICA>month</I></FONT>&nbsp;=&nbsp;<FONT face=HELVETICA>0</FONT>, int <I><FONT color=991122 face=HELVETICA>year</I></FONT>&nbsp;=&nbsp;<FONT face=HELVETICA>0</FONT><B><TT><FONT size=+1>)</TT></B></FONT>
+
+<TR><TD>
+void <B><TT><FONT  size=+1>SetDate(</TT></B></FONT>const char *<I><FONT  color=991122 face=HELVETICA>tdate</I></FONT><B><TT><FONT size=+1>)</TT></B></FONT>
+</TABLE></TABLE>
+
+<P><B><TT><A HREF="#GetDate()">GetDate()</A></TT></B> возвращает дату, установленную в контроле. День, месяц, год даты записываются в переменные <I><FONT  color=991122 face=HELVETICA>day</I></FONT>, <I><FONT  color=991122 face=HELVETICA>month</I></FONT>, <I><FONT  color=991122 face=HELVETICA>year</I></FONT>.
+
+<P><B><TT><A HREF="#SetDate()">SetDate()</A></TT></B> устанавливает дату в контроле согласно значениям параметров <I><FONT  color=991122 face=HELVETICA>day</I></FONT>, <I><FONT color=991122 face=HELVETICA>month</I></FONT>, <I><FONT  color=991122 face=HELVETICA>year</I></FONT> либо строки <I><FONT color=991122 face=HELVETICA>tdate</I></FONT>.
+
+<P>Во втором варианте функции <B><TT><A HREF="#SetDate()">SetDate()</A></TT></B> предполагается, что <I><FONT color=991122 face=HELVETICA>tdate</I></FONT> - запись даты в текстовом виде с учетом флагов, установленных конструктором контрола и функцией <B><TT><A HREF="#SetFlags()">SetFlags()</A></TT></B>.
+
+<P>Если задаваемая для <B><TT><A HREF="#SetDate()">SetDate()</A></TT></B> дата некорректна, неверные день, месяц, год исправляются на значения текущей системной даты (при установленном флаге <B><TT><A HREF="#CC_SHORT_YEAR">CC_SHORT_YEAR</A></TT></B> год отсчитывается в пределах допустимого столетия).
+
+<P><B>См. также: </B><B><TT><A HREF="#Text()">Text()</A></TT></B> 
+
+<P>
+</BLOCKQUOTE>
+
+<HR>
+
+<TABLE><TR><TD><FONT size=+2>
+
+<A NAME="GetFlags()"></A>GetFlags()
+,
+<A NAME="SetFlags()"></A>SetFlags()
+</FONT></TABLE>
+<P>
+
+<P>
+
+<BLOCKQUOTE>
+<TABLE bgcolor="550033" width=1000 border="2">
+<TR><TD>
+<Table cellpadding =8 bgcolor="white" border width=1000> 
+<TR><TD>
+uint32 <B><TT><FONT size=+1>GetFlags(</TT></B></FONT>void<B><TT><FONT size=+1>)</TT></B></FONT>
+
+<TR><TD>
+void <B><TT><FONT  size=+1>SetFlags(</TT></B></FONT>uint32 <I><FONT  color=991122 face=HELVETICA>flags</I></FONT><B><TT><FONT size=+1>)</TT></B></FONT>
+</TABLE></TABLE>
+
+<P><B><TT><A HREF="#GetFlags()">GetFlags()</A></TT></B> возвращает параметры даты как комбинацию констант <A HREF="#Formats">формата</A> даты, <A HREF="#LongShortYear">представления года</A> (краткое или полное) и <A HREF="#Century">начала столетия</A>.
+
+<P>Каждый из параметров в отдельности получается следующим способом:
+
+<P><TABLE bgcolor="ffdd88" border=2 width=1000><TR><TD>
+<TABLE bgcolor="white" cellpadding=9 width=1000><TR><TD>
+<TT>if((GetFlags() & CC_MM_DD_YYYY_FORMAT) == CC_MM_DD_YYYY_FORMAT) // формат даты
+<br><br>
+if((GetFlags() & CC_SHORT_YEAR) == CC_SHORT_YEAR) // представление года
+<br><br>
+if((GetFlags() & CC_HALF_CENTURY) == CC_HALF_CENTURY) // начало столетия
+<br>
+</TT></TABLE></TABLE>
+
+<P><I><B>Замечание:</B></I> в приведенных выражениях вы не можете использовать константы <B><TT><A HREF="#CC_DD_MM_YYYY_FORMAT">CC_DD_MM_YYYY_FORMAT</A></TT></B>, <B><TT><A HREF="#CC_FULL_YEAR">CC_FULL_YEAR</A></TT></B> и <B><TT><A HREF="#CC_FULL_CENTURY">CC_FULL_CENTURY</A></TT></B> после знака "&" (но можно после знака "=="), т.к. эти константы равны нулю и операция "&" даст в результате 0 вне зависимости от действительно установленных флагов.
+
+<P><B><TT><A HREF="#SetFlags()">SetFlags()</A></TT></B> устанавливает <A HREF="#Formats">формат</A> даты в контроле. Флаги <A HREF="#LongShortYear">представления года</A> и <A HREF="#Century">начала столетия</A> игнорируются.
+
+<P>
+</BLOCKQUOTE>
+
+<HR>
+
+<TABLE><TR><TD><FONT size=+2>
+
+<A NAME="GetLook()"></A>GetLook()
+,
+<A NAME="SetLook()"></A>SetLook()
+</FONT></TABLE>
+<P>
+
+<P>
+
+<BLOCKQUOTE>
+<TABLE bgcolor="550033" width=1000 border="2">
+<TR><TD>
+<Table cellpadding =8 bgcolor="white" border width=1000> 
+<TR><TD>
+uint32 <B><TT><FONT size=+1>GetLook(</TT></B></FONT>void<B><TT><FONT size=+1>)</TT></B></FONT>
+
+<TR><TD>
+void <B><TT><FONT  size=+1>SetLook(</TT></B></FONT>uint32 <I><FONT color=991122 face=HELVETICA>look</I></FONT><B><TT><FONT size=+1>)</TT></B></FONT>
+</TABLE></TABLE>
+
+<P><B><TT><A HREF="#GetLook()">GetLook()</A></TT></B> возвращает параметры внешнего вида контрола как комбинацию <A HREF="#Dividers">разделителя</A> элементов даты в контроле и флага <A HREF="#Interface">интерфейса</A>.
+
+<P>Каждый из параметров в отдельности получается следующим способом:
+
+<P><TABLE bgcolor="ffdd88" border=2 width=1000><TR><TD>
+<TABLE bgcolor="white" cellpadding=9 width=1000><TR><TD>
+<TT>if((GetLook() & CC_ALL_DIVIDERS) == CC_DOT_DIVIDER) // разделители, после знака "==" ставится любой из <A HREF="#Dividers">разделителей</A>
+<br><br>
+if((GetLook() & CC_ALL_INTERFACES) == CC_BEOS_INTERFACE) // интерфейсы, после знака "==" ставится любой из флагов <A HREF="#Interface">интерфейса</A> (см. замечание)
+<br>
+</TT></TABLE></TABLE>
+
+<P><I><B>Замечание:</B></I> возвращаемый флаг <A HREF="#Interface">интерфейса</A> принимает только значения <B><TT><A HREF="#CC_BEOS_INTERFACE">CC_BEOS_INTERFACE</A></TT></B> и <B><TT><A HREF="#CC_ZETA_INTERFACE">CC_ZETA_INTERFACE</A></TT></B>, т.е. флаг, определяющий внешний вид контрола в данный момент (даже если в конструкторе был задан <B><TT><A HREF="#CC_AUTO_INTERFACE">CC_AUTO_INTERFACE</A></TT></B>). Информацию о допустимости использования флага <B><TT><A HREF="#CC_AUTO_INTERFACE">CC_AUTO_INTERFACE</A></TT></B> (т.е. был ли задан соответствующий параметр при компиляции) можно получить, анализируя результат выполнения функции <B><TT><A HREF="#Version()">Version()</A></TT></B>.
+
+<P><B><TT><A HREF="#SetLook()">SetLook()</A></TT></B> устанавливает значение <A HREF="#Dividers">разделителя</A> элементов даты в поле ввода даты контрола. Флаг <A HREF="#Interface">интерфейса</A> игнорируется.
+
+<P>
+</BLOCKQUOTE>
+
+<HR>
+
+<TABLE><TR><TD><FONT size=+2>
+
+<A NAME="Text()"></A>Text()
+</FONT></TABLE>
+<P>
+
+<P>
+
+<BLOCKQUOTE>
+<TABLE bgcolor="550033" width=1000 border="2">
+<TR><TD>
+<Table cellpadding =8 bgcolor="white" border width=1000> 
+<TR><TD>
+const char *<B><TT><FONT  size=+1>Text(</TT></B></FONT>void<B><TT><FONT size=+1>)</TT></B></FONT> const
+</TABLE></TABLE>
+
+<P>Возвращает дату в контроле в виде текста, используя текущие <A HREF="#Formats">формат</A>,  <A HREF="#LongShortYear">представление года</A> и <A HREF="#Dividers">разделитель</A>.
+
+<P>
+
+</BLOCKQUOTE>
+
+<HR>
+
+<TABLE><TR><TD><FONT size=+2>
+
+<A NAME="TextView()"></A>TextView()
+</FONT></TABLE>
+<P>
+
+<P>
+
+<BLOCKQUOTE>
+<TABLE bgcolor="550033" width=1000 border="2">
+<TR><TD>
+<Table cellpadding =8 bgcolor="white" border width=1000> 
+<TR><TD>
+BTextView *<B><TT><FONT  size=+1>TextView(</TT></B></FONT>void<B><TT><FONT size=+1>)</TT></B></FONT> const
+</TABLE></TABLE>
+
+<P>Возвращает указатель на объект BTextView, принадлежащий контролу, в котором происходит редактирование даты. Используйте этот результат только для чтения, иначе работа контрола может быть нарушена.
+
+<P>
+
+</BLOCKQUOTE>
+
+<HR>
+
+<TABLE><TR><TD><FONT size=+2>
+
+<A NAME="Version()"></A>Version()
+</FONT></TABLE>
+<P>
+
+<P>
+
+<BLOCKQUOTE>
+<TABLE bgcolor="550033" width=1000 border="2">
+<TR><TD>
+<Table cellpadding =8 bgcolor="white" border width=1000> 
+<TR><TD>
+const char *<B><TT><FONT  size=+1>Version(</TT></B></FONT>void<B><TT><FONT size=+1>)</TT></B></FONT>
+</TABLE></TABLE>
+
+<P>Возвращает текстовую строку, описывающую версию и параметры компиляции библиотеки с контролом.
+
+<P>
+
+</BLOCKQUOTE>
+
+<HR>
+<H2>
+<A NAME="Const"></A><FONT color="430000"><FONT SIZE=6>К</FONT>онстанты</FONT>
+</H2>
+
+<HR>
+
+<TABLE><TR><TD><FONT size=+2>
+
+<A NAME="Formats"></A>Форматы
+</FONT></TABLE>
+<P>
+
+<BLOCKQUOTE>
+<TABLE bgcolor="550033" width=1000 border="2">
+<TR><TD>
+<Table cellpadding =8 bgcolor="white" border width=1000> 
+<TH bgcolor="eeeaea" align=left>
+<FONT  face=Helvetica>Константа</FONT></TH>
+<TR>
+<TD><B><TT><FONT size=+1>
+<A NAME="CC_DD_MM_YYYY_FORMAT"></A>CC_DD_MM_YYYY_FORMAT
+</TT></B></FONT></TD>
+<TR>
+<TD><B><TT><FONT size=+1>
+<A NAME="CC_MM_DD_YYYY_FORMAT"></A>CC_MM_DD_YYYY_FORMAT
+</TT></B></FONT></TD>
+</TABLE></TABLE>
+
+<P>Константы определяют формат даты в контроле (DD.MM.YYYY или MM.DD.YYYY).
+
+<P><B>См. также: </B><B><TT><A HREF="#SetFlags()">SetFlags()</A></TT></B></B>, <B><TT><A HREF="#CalendarControl()">CalendarControl()</A></TT></B> 
+<P>
+
+</BLOCKQUOTE>
+
+<HR>
+
+<TABLE><TR><TD><FONT size=+2>
+
+<A NAME="LongShortYear"></A>Представление года
+</FONT></TABLE>
+<P>
+
+<BLOCKQUOTE>
+<TABLE bgcolor="550033" width=1000 border="2">
+<TR><TD>
+<Table cellpadding =8 bgcolor="white" border width=1000> 
+<TH bgcolor="eeeaea" align=left>
+<FONT  face=Helvetica>Константа</FONT></TH>
+<TR>
+<TD><B><TT><FONT size=+1>
+<A NAME="CC_FULL_YEAR"></A>CC_FULL_YEAR
+</TT></B></FONT></TD>
+<TR>
+<TD><B><TT><FONT size=+1>
+<A NAME="CC_SHORT_YEAR"></A>CC_SHORT_YEAR
+</TT></B></FONT></TD>
+</TABLE></TABLE>
+
+<P>Константы задают число цифр в представлении года (DD.MM.YYYY или DD.MM.YY).
+
+<P><B>См. также: </B><B><TT><A HREF="#CalendarControl()">CalendarControl()</A></TT></B> 
+<P>
+
+</BLOCKQUOTE>
+
+<HR>
+
+<TABLE><TR><TD><FONT size=+2>
+
+<A NAME="Century"></A>Начало столетия
+</FONT></TABLE>
+<P>
+
+<BLOCKQUOTE>
+<TABLE bgcolor="550033" width=1000 border="2">
+<TR><TD>
+<Table cellpadding =8 bgcolor="white" border width=1000> 
+<TH bgcolor="eeeaea" align=left>
+<FONT  face=Helvetica>Константа</FONT></TH>
+<TR>
+<TD><B><TT><FONT size=+1>
+<A NAME="CC_FULL_CENTURY"></A>CC_FULL_CENTURY
+</TT></B></FONT></TD>
+<TR>
+<TD><B><TT><FONT size=+1>
+<A NAME="CC_HALF_CENTURY"></A>CC_HALF_CENTURY
+</TT></B></FONT></TD>
+</TABLE></TABLE>
+
+<P>Если год представлен двумя цифрами, то эти константы задают границы столетия, в пределах которого контрол принимает значения: либо с 01 года столетия до 00 года, либо с 51 года столетия до 50 года следующего столетия.
+
+<P><B>См. также: </B><B><TT><A HREF="#CalendarControl()">CalendarControl()</A></TT></B> 
+<P>
+
+</BLOCKQUOTE>
+
+<HR>
+
+<TABLE><TR><TD><FONT size=+2>
+
+<A NAME="Dividers"></A>Разделители
+</FONT></TABLE>
+<P>
+
+<BLOCKQUOTE>
+<TABLE bgcolor="550033" width=1000 border="2">
+<TR><TD>
+<Table cellpadding =8 bgcolor="white" border width=1000> 
+<TH bgcolor="eeeaea" align=left>
+<FONT  face=Helvetica>Константа</FONT></TH>
+<TR>
+<TD><B><TT><FONT size=+1>
+<A NAME="CC_DOT_DIVIDER"></A>CC_DOT_DIVIDER
+</TT></B></FONT></TD>
+<TR>
+<TD><B><TT><FONT size=+1>
+<A NAME="CC_SLASH_DIVIDER"></A>CC_SLASH_DIVIDER
+</TT></B></FONT></TD>
+<TR>
+<TD><B><TT><FONT size=+1>
+<A NAME="CC_MINUS_DIVIDER"></A>CC_MINUS_DIVIDER
+</TT></B></FONT></TD>
+<TR>
+<TD><B><TT><FONT size=+1>
+<A NAME="CC_ALL_DIVIDERS"></A>CC_ALL_DIVIDERS
+</TT></B></FONT></TD>
+</TABLE></TABLE>
+
+<P>Первые три константы задают разделитель элементов даты (дня, месяца и года) в поле ввода даты контрола (DD.MM.YYYY, DD/MM/YYYY или DD-MM-YYYY).
+<P><B><TT><A HREF="#CC_ALL_DIVIDERS">CC_ALL_DIVIDERS</A></TT></B> используется для выделения разделителей из результата, возвращаемого функцией <B><TT><A HREF="#GetLook()">GetLook()</A></TT></B>.
+
+<P><B>См. также: </B><B><TT><A HREF="#GetLook()">GetLook()</A></TT></B>, <B><TT><A HREF="#CalendarControl()">CalendarControl()</A></TT></B>
+<P>
+
+</BLOCKQUOTE>
+
+
+<HR>
+
+<TABLE><TR><TD><FONT size=+2>
+
+<A NAME="Interface"></A>Интерфейс
+</FONT></TABLE>
+<P>
+
+<BLOCKQUOTE>
+<TABLE bgcolor="550033" width=1000 border="2">
+<TR><TD>
+<Table cellpadding =8 bgcolor="white" border width=1000> 
+<TH bgcolor="eeeaea" align=left>
+<FONT  face=Helvetica>Константа</FONT></TH>
+<TR>
+<TD><B><TT><FONT size=+1>
+<A NAME="CC_AUTO_INTERFACE"></A>CC_AUTO_INTERFACE
+</TT></B></FONT></TD>
+<TR>
+<TD><B><TT><FONT size=+1>
+<A NAME="CC_BEOS_INTERFACE"></A>CC_BEOS_INTERFACE
+</TT></B></FONT></TD>
+<TR>
+<TD><B><TT><FONT size=+1>
+<A NAME="CC_ZETA_INTERFACE"></A>CC_ZETA_INTERFACE
+</TT></B></FONT></TD>
+<TR>
+<TD><B><TT><FONT size=+1>
+<A NAME="CC_ALL_INTERFACES"></A>CC_ALL_INTERFACES
+</TT></B></FONT></TD>
+</TABLE></TABLE>
+
+<P>Первые три константы задают внешний вид (интерфейс) контрола (определяемый операционной системой, BeOS или Zeta). Интерфейс устанавливается при создании контрола, зависит также от параметров при компиляции (см. <A HREF="Compile.html">Compile.html</A>).
+<P><B><TT><A HREF="#CC_ALL_INTERFACES">CC_ALL_INTERFACES</A></TT></B> используется для выделения интерфейсов из результата, возвращаемого функцией <B><TT><A HREF="#GetLook()">GetLook()</A></TT></B>.
+
+<P><B>См. также: </B><B><TT><A HREF="#GetLook()">GetLook()</A></TT></B>, <B><TT><A HREF="#CalendarControl()">CalendarControl()</A></TT></B>
+<P>
+
+</BLOCKQUOTE>
+</body>
+</html>
+

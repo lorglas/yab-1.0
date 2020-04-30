@@ -1,0 +1,569 @@
+<HTML>
+ <HEAD>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+  <TITLE>Calendar Control</TITLE>
+ </HEAD>
+ <BODY BGCOLOR=white link="#2222AA">
+  <A NAME="CalendarControl"></A>
+  
+  <H1><FONT SIZE="+5"> Calendar Control</FONT></H1>
+  
+  <BLOCKQUOTE><FONT face=helvetica SIZE=+1><B>
+   Calendar Control version 2.5<BR>
+   by Al.V. Sarikov.<BR>
+   Kherson, Ukraine, 2006.<BR>
+   E-mail: <A HREF="mailto:avix@ukrpost.net">avix@ukrpost.net</A>.<BR>
+   Home page: <A HREF="http://avix.pp.ru" TARGET="_new">http://avix.pp.ru</A>.
+  </B></FONT>
+  
+   <P><FONT face=helvetica><b>Distributed under BSD license (see LICENSE file).</b></font>
+   </BLOCKQUOTE>
+  
+  <BLOCKQUOTE>
+   <FONT face=helvetica><b>Derived from:</b></font>&nbsp;BControl
+   <br><FONT face=helvetica><b>Declared in:</b></font>&nbsp;CalendarControl.h
+   <br><FONT face=helvetica><b>Library:</b></font>&nbsp;CalendarControl.a
+   <br><FONT face=helvetica><b>Summary:</b></font>&nbsp;
+   <A HREF="CalendarControl.summary.html"><i>more...</i></A>
+   <br>
+   
+   <P>
+   <br>
+   
+   <P>Calendar Control allows to work with dates: enter date to text field of control and choose date from calendar. Opened control (with BeOS interface) is shown on picture.
+   <P><IMG border SRC="CalendarControl.png" ALIGN="center">
+   <P><A NAME="DateRange"></A>Control works with full and short date (when year is written as is or only with two last numbers). In first case dates from January 1 0001 till December 31 9999 are acceptable. In second case years will be in limits of one century: from 01st year of century to 00th year or from 51st year of one century to 50th year of next century (it depends upon <A HREF="#Century">century beginning</A> flag which set in constructor). Months are numbered from 1 (January).
+   <P>Date is entered to text field as usual text (but only numbers are allowed). If date has been entered incorrectly (month more than 12, day more than 31 and the like), it is automatically corrected by changing all wrong values to values of today's system date.
+   <P>It is allowed to select text in text field, copy text or its part to Clipboard, delete symbols (instead of deleted number 0 is appeared). Inserting text is prohibited because it could make date in text field of control incorrect.
+   <P>After clicking with mouse on button near text field (or pressing Ctrl+down arrow on keyboard) calendar window is opened. First calendar contains month and year which were entered to text field. Day entered to text field is framed with blue rectangle.
+   <P>If month and year concur with month and year of system date today's day is written with red colour.
+   <P>Navigation on calendar is realized with mouse or keyboard.
+   <P>Clicking on arrows (symbols "&lt&lt" and "&gt&gt") near month user changes current month. The same clicking on arrows near year he changes year.
+   <P>Click on string on the bottom of calendar window makes system date current in calendar (day, month, year). Final choosing date is made by clicking with mouse on necessary day while necessary month and year are current in calendar. Chosen date is placed to text field of calendar control.
+   <P>If you navigate with keyboard you can use arrow keys (they move by days of month or change month or year depending upon where focus is), Tab or Shift+Tab keys (just change focus), Enter or Space (make today's date current or finally choose date, depending upon focus), ESC or Ctrl+up arrow (close calendar window without choosing date).
+   <P>Making calendar window unfocused (by clicking with mouse out of it or if other window is activated) causes it to close without placing new date to text field of control.
+   <P><b>History of versions:</b>
+   <P><i>Version 1.0:</i>
+   <ul>
+    <li>first version.
+   </ul>
+   <P><i>Version 2.0:</i>
+   <ul>
+    <li>possibility to work with dates in which year is written with two last numbers is added;
+    <li>keyboard navigation is added;
+    <li>some bugs (small and not) are corrected (and some other probably added :)), drawing control was improved;
+    <li>in addition to english and russian french version of control is made (at request of Eric Jourde and he gave necessary translations and abbreviations);
+    <li>some changes in API: functions GetFormat, SetFormat were removed, instead of them <B><TT><A HREF="#GetFlags()">GetFlags()</A></TT></B>, <B><TT><A HREF="#SetFlags()">SetFlags()</A></TT></B> are added;
+    <li>function <B><TT><A HREF="#SetDate()">SetDate()</A></TT></B> which accepts text string as parameter is added.
+   </ul>
+   <P><i>Version 2.1 (didn't distributed):</i>
+   <ul>
+    <li>changes in API: function <B><TT><A HREF="#TextView()">TextView()</A></TT></B> is added;
+    <li>appearance of control is improved: inactive control looks other than active;
+    <li>some bugs which could bring to wrong representation of parts of control are corrected (thanks to Jan Bungeroth pointed out them);
+    <li>errors in working with leap years are fixed (thanks to Jan Bungeroth pointed out them);
+    <li>in special edition of version 2.1 code and options changing (if to compile in Zeta) appearance of control and making it localized with system means of Zeta (instead of english version) are added (proposed and developed by Jan Bungeroth).
+   </ul>
+   <P><i>Version 2.5:</i>
+   <ul>
+    <li>additional interface near to interface of such controls in Zeta is developed and included to code;
+    <li>possibility to choose interface of control depending upon system in which program with control is started is made (it is defined by parameters while compiling and flags of <B><TT><A HREF="#SetLook()">SetLook()</A></TT></B> function while running);
+    <li>it is added (as variant while compiling) localization with system means of Zeta (which realized in special edition of version 2.1; proposed and developed by Jan Bungeroth).
+    <li>these improvements allow to compile controls with various properties (appearance and language of interface) depending upon parameters set while compiling (details in file <A HREF="Compile.html">Compile.html</A> ). It forced to open source code (not to distribute all possible variants) and change license under which control is distributed to BSD (see file LICENSE);
+    <li>geometry of control and calendar window is made better;
+    <li>navigation on calendar window is improved;
+   </ul>
+  </BLOCKQUOTE>
+  
+  <P>
+  <HR>
+  <H2><A NAME="Constructor"></A><FONT color="430000"><FONT SIZE=6>C</FONT>onstructor and <FONT SIZE=6>D</FONT>estructor</FONT></H2>
+  <A NAME="36000:_funcNameFirst:_CalendarControl()"></A>
+  
+  <HR>
+  
+  <TABLE><TR><TD><FONT size=+2><A NAME="CalendarControl()"></A>CalendarControl()</FONT></TABLE>
+  
+  <P>
+  <P>
+  <BLOCKQUOTE>
+<TABLE bgcolor="550033" width=1000 border="2">
+<TR><TD>
+<Table cellpadding =8 bgcolor="white" border width=1000> 
+<TR><TD>
+<B><TT><FONT size=+1>CalendarControl(</TT></B></FONT>BPoint <I><FONT  color=991122 face=HELVETICA>p</I></FONT>, 
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;const char *<I><FONT  color=991122 face=HELVETICA>name</I></FONT>,
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;int <I><FONT color=991122 face=HELVETICA>day</I></FONT>&nbsp;=&nbsp;<FONT face=HELVETICA>0</FONT>,
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;int <I><FONT color=991122 face=HELVETICA>month</I></FONT>&nbsp;=&nbsp;<FONT face=HELVETICA>0</FONT>,
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;int <I><FONT color=991122 face=HELVETICA>year</I></FONT>&nbsp;=&nbsp;<FONT face=HELVETICA>0</FONT>,
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;uint32 <I><FONT color=991122 face=HELVETICA>flags</I></FONT>&nbsp;=&nbsp;<B><TT>CC_DD_MM_YYYY_FORMAT | CC_FULL_YEAR</TT></B>,
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;uint32 <I><FONT color=991122 face=HELVETICA>look</I></FONT>&nbsp;=&nbsp;<B><TT>CC_DOT_DIVIDER | CC_AUTO_INTERFACE)</TT></B>
+</TABLE></TABLE>
+
+<P>Creates calendar control. Parameters:
+<P>
+<UL>
+<LI><I><FONT  color=991122 face=HELVETICA>p</I></FONT> - upper left corner of control on window to which control will be attached. The sizes of control are set automatically.
+<P>
+<LI><I><FONT  color=991122 face=HELVETICA>name</I></FONT> - name of control. Can be any.
+<P>
+<LI><I><FONT  color=991122 face=HELVETICA>day, month, year</I></FONT> - day, month and year which will be placed to text field of control. If they are equal to zero current system date will be set as value of text field (see <A HREF="#DateRange">acceptable dates</A>).
+<P>
+<LI><I><FONT color=991122 face=HELVETICA>flags</I></FONT> - date parameters, combination of constants which define <A HREF="#Formats">format</A> of date in text field of control, quantity of numbers in <A HREF="#LongShortYear">year representation</A> and (if year is written shortly) <A HREF="#Century">century beginning</A> flag. Two last flags are set while creating control and can't be changed later.
+<P>
+<LI><I><FONT  color=991122 face=HELVETICA>look</I></FONT> - parameters of interface, combination of constants which define <A HREF="#Dividers">divider</A> between elements of date in text field and <A HREF="#Interface">interface</A> (appearance) of control. Interface flag is set while creating control and can't be changed later. It is valid only if control was compiled with universal interface (see <A HREF="Compile.html">Compile.html</A>). In other cases interface flag is set by constructor itself no matter of defined in <I><FONT  color=991122 face=HELVETICA>look</I></FONT> variable.
+<P>
+</UL>
+<P>
+After control has been created it must be attached to parent (window or BView) with parent's AddChild() function.
+<P>
+
+</BLOCKQUOTE>
+
+<HR>
+
+<TABLE><TR><TD><FONT size=+2>
+
+<A NAME="~CalendarControl()"></A>~CalendarControl()
+</FONT></TABLE>
+<P>
+
+<P>
+
+<BLOCKQUOTE>
+<TABLE bgcolor="550033" width=1000 border="2">
+<TR><TD>
+<Table cellpadding =8 bgcolor="white" border width=1000> 
+<TR><TD>
+<B><TT><FONT size=+1>~CalendarControl()</TT></B></FONT>
+</TABLE></TABLE>
+
+<P>Deletes dynamic class variables.
+
+<P>
+</BLOCKQUOTE>
+
+<HR>
+<H2>
+<A NAME="Member_Functions"></A><FONT color="430000"><FONT SIZE=6>F</FONT>unctions</FONT >
+</H2>
+<HR>
+
+<TABLE><TR>
+<TD><FONT size=+2>
+GetDate()&nbsp;see&nbsp;<A HREF="#SetDate()">SetDate()</A></FONT>
+
+<TR><TD><FONT size=+2>
+GetFlags()&nbsp;see&nbsp;<A HREF="#SetFlags()">SetFlags()</A></FONT>
+
+<TR><TD><FONT size=+2>
+GetLook()&nbsp;see&nbsp;<A HREF="#SetLook()">SetLook()</A></FONT></TABLE>
+<P>
+
+<HR>
+
+<TABLE><TR><TD><FONT size=+2>
+
+<A NAME="GetYearRange()"></A>GetYearRange()
+</FONT></TABLE>
+<P>
+
+<P>
+
+<BLOCKQUOTE>
+<TABLE bgcolor="550033" width=1000 border="2">
+<TR><TD>
+<Table cellpadding =8 bgcolor="white" border width=1000> 
+<TR><TD>
+void <B><TT><FONT size=+1>GetYearRange(</TT></B></FONT>int *<I><FONT  color=991122 face=HELVETICA>first_year</I></FONT>, int *<I><FONT color=991122 face=HELVETICA>last_year</I></FONT><B><TT><FONT size=+1>)</TT></B></FONT>
+</TABLE></TABLE>
+
+<P>Returns as <I><FONT color=991122 face=HELVETICA>first_year</I></FONT>, <I><FONT  color=991122 face=HELVETICA>last_year</I></FONT> first and last years of range which can be used in control (see <A HREF="#DateRange">acceptable dates</A>).
+
+<P>
+</BLOCKQUOTE>
+
+<HR>
+
+<TABLE><TR><TD><FONT size=+2>
+
+<A NAME="GetDate()"></A>GetDate()
+,
+<A NAME="SetDate()"></A>SetDate()
+</FONT></TABLE>
+<P>
+
+<P>
+
+<BLOCKQUOTE>
+<TABLE bgcolor="550033" width=1000 border="2">
+<TR><TD>
+<Table cellpadding =8 bgcolor="white" border width=1000> 
+<TR><TD>
+void <B><TT><FONT  size=+1>GetDate(</TT></B></FONT>int *<I><FONT  color=991122 face=HELVETICA>day</I></FONT>, int *<I><FONT color=991122 face=HELVETICA>month</I></FONT>, int *<I><FONT color=991122 face=HELVETICA>year</I></FONT><B><TT><FONT size=+1>)</TT></B></FONT>
+
+<TR><TD>
+void <B><TT><FONT  size=+1>SetDate(</TT></B></FONT>int <I><FONT  color=991122 face=HELVETICA>day</I></FONT>&nbsp;=&nbsp;<FONT face=HELVETICA>0</FONT>, int <I><FONT color=991122 face=HELVETICA>month</I></FONT>&nbsp;=&nbsp;<FONT face=HELVETICA>0</FONT>, int <I><FONT color=991122 face=HELVETICA>year</I></FONT>&nbsp;=&nbsp;<FONT face=HELVETICA>0</FONT><B><TT><FONT size=+1>)</TT></B></FONT>
+
+<TR><TD>
+void <B><TT><FONT  size=+1>SetDate(</TT></B></FONT>const char *<I><FONT  color=991122 face=HELVETICA>tdate</I></FONT><B><TT><FONT size=+1>)</TT></B></FONT>
+</TABLE></TABLE>
+
+<P><B><TT><A HREF="#GetDate()">GetDate()</A></TT></B> returns date value of control as <I><FONT  color=991122 face=HELVETICA>day</I></FONT>, <I><FONT  color=991122 face=HELVETICA>month</I></FONT> and <I><FONT  color=991122 face=HELVETICA>year</I></FONT>.
+
+<P><B><TT><A HREF="#SetDate()">SetDate()</A></TT></B> sets date value to control using <I><FONT  color=991122 face=HELVETICA>day</I></FONT>, <I><FONT  color=991122 face=HELVETICA>month</I></FONT> and <I><FONT  color=991122 face=HELVETICA>year</I></FONT> or <I><FONT color=991122 face=HELVETICA>tdate</I></FONT> string parameters.
+
+<P>In second version of function <B><TT><A HREF="#SetDate()">SetDate()</A></TT></B> <I><FONT color=991122 face=HELVETICA>tdate</I></FONT> assumed to be date written as text with using flags set by constructor and <B><TT><A HREF="#SetFlags()">SetFlags()</A></TT></B> function.
+
+<P>If given date is incorrect wrong day, month and year will be corrected to values of current system date (but if flag <B><TT><A HREF="#CC_SHORT_YEAR">CC_SHORT_YEAR</A></TT></B> is set year will be in limits of acceptable century).
+
+<P><B>See also: </B><B><TT><A HREF="#Text()">Text()</A></TT></B> 
+
+<P>
+</BLOCKQUOTE>
+
+<HR>
+
+<TABLE><TR><TD><FONT size=+2>
+
+<A NAME="GetFlags()"></A>GetFlags()
+,
+<A NAME="SetFlags()"></A>SetFlags()
+</FONT></TABLE>
+<P>
+
+<P>
+
+<BLOCKQUOTE>
+<TABLE bgcolor="550033" width=1000 border="2">
+<TR><TD>
+<Table cellpadding =8 bgcolor="white" border width=1000> 
+<TR><TD>
+uint32 <B><TT><FONT size=+1>GetFlags(</TT></B></FONT>void<B><TT><FONT size=+1>)</TT></B></FONT>
+
+<TR><TD>
+void <B><TT><FONT  size=+1>SetFlags(</TT></B></FONT>uint32 <I><FONT  color=991122 face=HELVETICA>flags</I></FONT><B><TT><FONT size=+1>)</TT></B></FONT>
+</TABLE></TABLE>
+
+<P><B><TT><A HREF="#GetFlags()">GetFlags()</A></TT></B> returns parameters of date as combination of constants of date <A HREF="#Formats">format</A>, <A HREF="#LongShortYear">year representation</A> (full or short) and <A HREF="#Century">century beginning</A>.
+
+<P>Each parameter can be obtained in such way:
+
+<P><TABLE bgcolor="ffdd88" border=2 width=1000><TR><TD>
+<TABLE bgcolor="white" cellpadding=9 width=1000><TR><TD>
+<TT>if((GetFlags() & CC_MM_DD_YYYY_FORMAT) == CC_MM_DD_YYYY_FORMAT) // format of date
+<br><br>
+if((GetFlags() & CC_SHORT_YEAR) == CC_SHORT_YEAR) // year representation
+<br><br>
+if((GetFlags() & CC_HALF_CENTURY) == CC_HALF_CENTURY) // beginning of century
+<br>
+</TT></TABLE></TABLE>
+
+<P><I><B>Note:</B></I> in expressions before you must not use <B><TT><A HREF="#CC_DD_MM_YYYY_FORMAT">CC_DD_MM_YYYY_FORMAT</A></TT></B>, <B><TT><A HREF="#CC_FULL_YEAR">CC_FULL_YEAR</A></TT></B> and <B><TT><A HREF="#CC_FULL_CENTURY">CC_FULL_CENTURY</A></TT></B> constants after "&" sign (but you may after "==" sign) because these constants are equal to zero and "&" operation gives 0 in result no matter which flags are set really.
+
+<P><B><TT><A HREF="#SetFlags()">SetFlags()</A></TT></B> sets date <A HREF="#Formats">format</A> flag only. <A HREF="#LongShortYear">Year representation</A> и <A HREF="#Century">century beginning</A> flags are ignored.
+
+<P>
+</BLOCKQUOTE>
+
+<HR>
+
+<TABLE><TR><TD><FONT size=+2>
+
+<A NAME="GetLook()"></A>GetLook()
+,
+<A NAME="SetLook()"></A>SetLook()
+</FONT></TABLE>
+<P>
+
+<P>
+
+<BLOCKQUOTE>
+<TABLE bgcolor="550033" width=1000 border="2">
+<TR><TD>
+<Table cellpadding =8 bgcolor="white" border width=1000> 
+<TR><TD>
+uint32 <B><TT><FONT size=+1>GetLook(</TT></B></FONT>void<B><TT><FONT size=+1>)</TT></B></FONT>
+
+<TR><TD>
+void <B><TT><FONT  size=+1>SetLook(</TT></B></FONT>uint32 <I><FONT color=991122 face=HELVETICA>look</I></FONT><B><TT><FONT size=+1>)</TT></B></FONT>
+</TABLE></TABLE>
+
+<P><B><TT><A HREF="#GetLook()">GetLook()</A></TT></B> returns interface parameters of control as combination of <A HREF="#Dividers">divider</A> of date elements and <A HREF="#Interface">interface</A> flag.
+
+<P>Each parameter can be obtained in such way:
+
+<P><TABLE bgcolor="ffdd88" border=2 width=1000><TR><TD>
+<TABLE bgcolor="white" cellpadding=9 width=1000><TR><TD>
+<TT>if((GetLook() & CC_ALL_DIVIDERS) == CC_DOT_DIVIDER) // dividers, after "==" sign can be any of <A HREF="#Dividers">dividers</A>
+<br><br>
+if((GetLook() & CC_ALL_INTERFACES) == CC_BEOS_INTERFACE) // interfaces, after "==" sign can be any of <A HREF="#Interface">interface</A> flags (see note below)
+<br>
+</TT></TABLE></TABLE>
+
+<P><I><B>Note:</B></I> returned flag of <A HREF="#Interface">interface</A> can be equal to <B><TT><A HREF="#CC_BEOS_INTERFACE">CC_BEOS_INTERFACE</A></TT></B> or <B><TT><A HREF="#CC_ZETA_INTERFACE">CC_ZETA_INTERFACE</A></TT></B>, i.e. flag defining appearance of control at current moment (even if <B><TT><A HREF="#CC_AUTO_INTERFACE">CC_AUTO_INTERFACE</A></TT></B> was set in constructor). But analysing result of <B><TT><A HREF="#Version()">Version()</A></TT></B> function one can learn whether <B><TT><A HREF="#CC_AUTO_INTERFACE">CC_AUTO_INTERFACE</A></TT></B> may be used (i.e. whether control was compiled with universal interface).
+
+<P><B><TT><A HREF="#SetLook()">SetLook()</A></TT></B> sets value of <A HREF="#Dividers">divider</A> of elements of date in text field of control. <A HREF="#Interface">Interface</A> flag is ignored.
+
+<P>
+</BLOCKQUOTE>
+
+<HR>
+
+<TABLE><TR><TD><FONT size=+2>
+
+<A NAME="Text()"></A>Text()
+</FONT></TABLE>
+<P>
+
+<P>
+
+<BLOCKQUOTE>
+<TABLE bgcolor="550033" width=1000 border="2">
+<TR><TD>
+<Table cellpadding =8 bgcolor="white" border width=1000> 
+<TR><TD>
+const char *<B><TT><FONT  size=+1>Text(</TT></B></FONT>void<B><TT><FONT size=+1>)</TT></B></FONT> const
+</TABLE></TABLE>
+
+<P>Returns date in control as text string using current <A HREF="#Formats">format</A>,  <A HREF="#LongShortYear">year representation</A> and <A HREF="#Dividers">divider</A>.
+
+<P>
+
+</BLOCKQUOTE>
+
+<HR>
+
+<TABLE><TR><TD><FONT size=+2>
+
+<A NAME="TextView()"></A>TextView()
+</FONT></TABLE>
+<P>
+
+<P>
+
+<BLOCKQUOTE>
+<TABLE bgcolor="550033" width=1000 border="2">
+<TR><TD>
+<Table cellpadding =8 bgcolor="white" border width=1000> 
+<TR><TD>
+BTextView *<B><TT><FONT  size=+1>TextView(</TT></B></FONT>void<B><TT><FONT size=+1>)</TT></B></FONT> const
+</TABLE></TABLE>
+
+<P>Returns pointer to BTextView object belonging to control in which date is edited. Use this pointer read-only otherwise control can work incorrectly.
+
+<P>
+
+</BLOCKQUOTE>
+
+<HR>
+
+<TABLE><TR><TD><FONT size=+2>
+
+<A NAME="Version()"></A>Version()
+</FONT></TABLE>
+<P>
+
+<P>
+
+<BLOCKQUOTE>
+<TABLE bgcolor="550033" width=1000 border="2">
+<TR><TD>
+<Table cellpadding =8 bgcolor="white" border width=1000> 
+<TR><TD>
+const char *<B><TT><FONT  size=+1>Version(</TT></B></FONT>void<B><TT><FONT size=+1>)</TT></B></FONT>
+</TABLE></TABLE>
+
+<P>Returns text string describing version and parameters of compiling library with control.
+
+<P>
+
+</BLOCKQUOTE>
+
+<HR>
+<H2>
+<A NAME="Const"></A><FONT color="430000"><FONT SIZE=6>C</FONT>onstants</FONT>
+</H2>
+
+<HR>
+
+<TABLE><TR><TD><FONT size=+2>
+
+<A NAME="Formats"></A>Formats
+</FONT></TABLE>
+<P>
+
+<BLOCKQUOTE>
+<TABLE bgcolor="550033" width=1000 border="2">
+<TR><TD>
+<Table cellpadding =8 bgcolor="white" border width=1000> 
+<TH bgcolor="eeeaea" align=left>
+<FONT  face=Helvetica>Constant</FONT></TH>
+<TR>
+<TD><B><TT><FONT size=+1>
+<A NAME="CC_DD_MM_YYYY_FORMAT"></A>CC_DD_MM_YYYY_FORMAT
+</TT></B></FONT></TD>
+<TR>
+<TD><B><TT><FONT size=+1>
+<A NAME="CC_MM_DD_YYYY_FORMAT"></A>CC_MM_DD_YYYY_FORMAT
+</TT></B></FONT></TD>
+</TABLE></TABLE>
+
+<P>Constants define format of date in control (DD.MM.YYYY or MM.DD.YYYY).
+
+<P><B>See also: </B><B><TT><A HREF="#SetFlags()">SetFlags()</A></TT></B></B>, <B><TT><A HREF="#CalendarControl()">CalendarControl()</A></TT></B>
+<P>
+
+</BLOCKQUOTE>
+
+<HR>
+
+<TABLE><TR><TD><FONT size=+2>
+
+<A NAME="LongShortYear"></A>Year representation
+</FONT></TABLE>
+<P>
+
+<BLOCKQUOTE>
+<TABLE bgcolor="550033" width=1000 border="2">
+<TR><TD>
+<Table cellpadding =8 bgcolor="white" border width=1000> 
+<TH bgcolor="eeeaea" align=left>
+<FONT  face=Helvetica>Constant</FONT></TH>
+<TR>
+<TD><B><TT><FONT size=+1>
+<A NAME="CC_FULL_YEAR"></A>CC_FULL_YEAR
+</TT></B></FONT></TD>
+<TR>
+<TD><B><TT><FONT size=+1>
+<A NAME="CC_SHORT_YEAR"></A>CC_SHORT_YEAR
+</TT></B></FONT></TD>
+</TABLE></TABLE>
+
+<P>Constants specify how many numbers are used in year representation (DD.MM.YYYY or DD.MM.YY).
+
+<P><B>See also: </B><B><TT><A HREF="#CalendarControl()">CalendarControl()</A></TT></B> 
+<P>
+
+</BLOCKQUOTE>
+
+<HR>
+
+<TABLE><TR><TD><FONT size=+2>
+
+<A NAME="Century"></A>Century beginning
+</FONT></TABLE>
+<P>
+
+<BLOCKQUOTE>
+<TABLE bgcolor="550033" width=1000 border="2">
+<TR><TD>
+<Table cellpadding =8 bgcolor="white" border width=1000> 
+<TH bgcolor="eeeaea" align=left>
+<FONT  face=Helvetica>Constant</FONT></TH>
+<TR>
+<TD><B><TT><FONT size=+1>
+<A NAME="CC_FULL_CENTURY"></A>CC_FULL_CENTURY
+</TT></B></FONT></TD>
+<TR>
+<TD><B><TT><FONT size=+1>
+<A NAME="CC_HALF_CENTURY"></A>CC_HALF_CENTURY
+</TT></B></FONT></TD>
+</TABLE></TABLE>
+
+<P>If year is presented as short year these constants define what range of years control accepts: from 01st till 00th year of a century, or from 51st year of one century to 50th year of next century.
+
+<P><B>See also: </B><B><TT><A HREF="#CalendarControl()">CalendarControl()</A></TT></B> 
+<P>
+
+</BLOCKQUOTE>
+
+<HR>
+
+<TABLE><TR><TD><FONT size=+2>
+
+<A NAME="Dividers"></A>Dividers
+</FONT></TABLE>
+<P>
+
+<BLOCKQUOTE>
+<TABLE bgcolor="550033" width=1000 border="2">
+<TR><TD>
+<Table cellpadding =8 bgcolor="white" border width=1000> 
+<TH bgcolor="eeeaea" align=left>
+<FONT  face=Helvetica>Constanr</FONT></TH>
+<TR>
+<TD><B><TT><FONT size=+1>
+<A NAME="CC_DOT_DIVIDER"></A>CC_DOT_DIVIDER
+</TT></B></FONT></TD>
+<TR>
+<TD><B><TT><FONT size=+1>
+<A NAME="CC_SLASH_DIVIDER"></A>CC_SLASH_DIVIDER
+</TT></B></FONT></TD>
+<TR>
+<TD><B><TT><FONT size=+1>
+<A NAME="CC_MINUS_DIVIDER"></A>CC_MINUS_DIVIDER
+</TT></B></FONT></TD>
+<TR>
+<TD><B><TT><FONT size=+1>
+<A NAME="CC_ALL_DIVIDERS"></A>CC_ALL_DIVIDERS
+</TT></B></FONT></TD>
+</TABLE></TABLE>
+
+<P>First three constants specify divider of elements of date (day, month and year) in text field of control (DD.MM.YYYY, DD/MM/YYYY or DD-MM-YYYY).
+<P><B><TT><A HREF="#CC_ALL_DIVIDERS">CC_ALL_DIVIDERS</A></TT></B> is used to choose dividers from result which <B><TT><A HREF="#GetLook()">GetLook()</A></TT></B> function returns.
+
+<P><B>See also: </B><B><TT><A HREF="#GetLook()">GetLook()</A></TT></B>, <B><TT><A HREF="#CalendarControl()">CalendarControl()</A></TT></B>
+<P>
+
+</BLOCKQUOTE>
+
+
+<HR>
+
+<TABLE><TR><TD><FONT size=+2>
+
+<A NAME="Interface"></A>Interface
+</FONT></TABLE>
+<P>
+
+<BLOCKQUOTE>
+<TABLE bgcolor="550033" width=1000 border="2">
+<TR><TD>
+<Table cellpadding =8 bgcolor="white" border width=1000> 
+<TH bgcolor="eeeaea" align=left>
+<FONT  face=Helvetica>Constant</FONT></TH>
+<TR>
+<TD><B><TT><FONT size=+1>
+<A NAME="CC_AUTO_INTERFACE"></A>CC_AUTO_INTERFACE
+</TT></B></FONT></TD>
+<TR>
+<TD><B><TT><FONT size=+1>
+<A NAME="CC_BEOS_INTERFACE"></A>CC_BEOS_INTERFACE
+</TT></B></FONT></TD>
+<TR>
+<TD><B><TT><FONT size=+1>
+<A NAME="CC_ZETA_INTERFACE"></A>CC_ZETA_INTERFACE
+</TT></B></FONT></TD>
+<TR>
+<TD><B><TT><FONT size=+1>
+<A NAME="CC_ALL_INTERFACES"></A>CC_ALL_INTERFACES
+</TT></B></FONT></TD>
+</TABLE></TABLE>
+
+<P>First three constants specify appearance (interface) of control (automatically defined by operating system, BeOS or Zeta). Interface is set while creating control. It also depends upon parameters of compiling library with control (see <A HREF="Compile.html">Compile.html</A>).
+<P><B><TT><A HREF="#CC_ALL_INTERFACES">CC_ALL_INTERFACES</A></TT></B> is used to choose interfaces from result which <B><TT><A HREF="#GetLook()">GetLook()</A></TT></B> function returns.
+
+<P><B>See also: </B><B><TT><A HREF="#GetLook()">GetLook()</A></TT></B>, <B><TT><A HREF="#CalendarControl()">CalendarControl()</A></TT></B>
+<P>
+
+</BLOCKQUOTE>
+</body>
+</html>
+
