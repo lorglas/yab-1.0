@@ -1,0 +1,42 @@
+#!/boot/home/config/bin/yab
+
+docu Place a description of your
+docu program here.
+docu
+docu Author, date, license
+
+OpenWindow()
+
+// Main Message Loop
+inloop = true
+dim msg$(1)
+while(inloop)
+	nCommands = token(message$, msg$(), "|")
+
+	for everyCommand = 1 to nCommands
+		// Uncomment to print out the msg$ on the terminal output
+		// if(msg$(everyCommand)<>"") print msg$(everyCommand)
+
+		switch(msg$(everyCommand))
+			default:
+				break
+		end switch
+
+	next everyCommand
+
+wend
+
+CloseWindow()
+
+end
+
+
+// Setup the main window here
+sub OpenWindow()
+	return
+end sub
+
+// Close down the main window
+sub CloseWindow()
+	return
+end sub

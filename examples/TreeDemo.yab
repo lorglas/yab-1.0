@@ -1,0 +1,43 @@
+#!/boot/home/config/bin/yab
+
+window open 100,100 to 500,300, "A", "TreeDemo"
+window set "A", "flags", "not-h-resizable, not-v-resizable"
+
+textcontrol 10,15,95,35,"text", "end","XXend","A"
+
+treebox 10,50 to 374,190, "Tree1", 1, "A"
+
+treebox add "Tree1", "Hello1"
+treebox add "Tree1", "Hello1", "Test1", 1
+treebox add "Tree1", "Test1", "foo", 0
+treebox add "Tree1", "Test1", "bar", 0
+treebox add "Tree1", "Hello2"
+treebox add "Tree1", "Hello3"
+treebox add "Tree1", "Hello3", "Test3",0
+treebox add "Tree1", "Test3", "gugst",0
+treebox add "Tree1", "gugst", "du",0
+treebox add "Tree1", "Hello4"
+
+button image 110,15, "ImgButton1", "img/button_pressed.png", "img/button_norm.png", "img/button_disabled.png", "A"
+button image 180,15, "ImgButton2", "img/button_pressed.png", "img/button_norm.png", "img/button_disabled.png", "A"
+option set "ImgButton2", "enabled", false
+
+checkbox image 270,10, "ImgCheck1", "img/checkbutton_enabledOn.png", "img/checkbutton_enabledOff.png", "checkbutton_disabledOn.png", "checkbutton_disabledOff.png", 1, "A"
+checkbox image 320,10, "ImgCheck2", "img/checkbutton_enabledOn.png", "img/checkbutton_enabledOff.png", "img/checkbutton_disabledOn.png", "img/checkbutton_disabledOff.png", 2, "A"
+option set "ImgCheck2", "enabled", false
+
+print treebox get$ "Tree1", 1
+
+inloop = true
+
+while(inloop)
+	new$ = textcontrol get$ "text" 
+	if(new$<>old$) print new$
+	old$ = new$
+	m$ = message$
+	if(m$<>"") print m$
+	if(instr(m$, "Quit")) inloop = false
+wend
+
+window close "A"
+exit

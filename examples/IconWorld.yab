@@ -1,0 +1,94 @@
+#!/boot/home/config/bin/yab
+
+DIR_THIS$	= trim$(system$("pwd"))+"/"
+APP_NAME$	= "IconWorld.yab"
+time_sleep	= 2
+distance	= 110
+icon_w 		= min(100, distance)
+
+SCREEN_W = peek("desktopwidth")
+SCREEN_H = peek("desktopheight")
+
+W = 20
+H = 20
+
+X = (SCREEN_W/2)-(W/2)
+Y = (SCREEN_H/2)-(H/2)
+
+window open X, Y to X+W, Y+H, "Main_", "IconWorld"
+
+do
+	if (X+W < SCREEN_W) then
+		W = W+2
+		if (X > 0) X = X-1
+	fi
+
+	if (Y+H < SCREEN_W) then
+		H = H+2
+		if (Y > 0) Y = Y-1
+	fi
+
+	window set "Main_", "moveto", X, Y
+	window set "Main_", "resizeto", W, H
+
+	if (X+W = SCREEN_W and Y+H = SCREEN_W) break
+	sleep 0.001
+loop
+
+X = (SCREEN_W/2)
+Y = (SCREEN_H/2) - ((4*distance)/2)
+
+the_text$ = "bitmap get \"BMP_icon_\", \"path\", \"/boot/apps/Internet/NetPositive\""
+text_w = 10 + draw get "text-width", the_text$, "Main_"
+X = (W/2) - ((32+text_w)/2)
+draw text X+10+32, Y+15, the_text$, "Main_"
+bitmap get "BMP_icon_", "path", "/boot/apps/Internet/NetPositive"
+draw bitmap X, Y, "BMP_icon_", "alpha", "Main_"
+bitmap remove "BMP_icon_"
+Y = Y + distance
+sleep time_sleep
+
+the_text$ = "bitmap get \"BMP_icon_\", \"mime16\", \"application/x-vnd.Be-NPOS\""
+text_w = 10 + draw get "text-width", the_text$, "Main_"
+X = (W/2) - ((16+text_w)/2)
+draw text X+10+16, Y+15, the_text$, "Main_"
+bitmap get "BMP_icon_", "mime16", "application/x-vnd.Be-NPOS"
+draw bitmap X, Y, "BMP_icon_", "alpha", "Main_"
+bitmap remove "BMP_icon_"
+Y = Y + distance
+sleep time_sleep
+
+the_text$ = "bitmap get \"BMP_icon_\", \"mime32\", \"application/x-vnd.Be-NPOS\""
+text_w = 10 + draw get "text-width", the_text$, "Main_"
+X = (W/2) - ((32+text_w)/2)
+draw text X+10+32, Y+15, the_text$, "Main_"
+bitmap get "BMP_icon_", "mime32", "application/x-vnd.Be-NPOS"
+draw bitmap X, Y, "BMP_icon_", "alpha", "Main_"
+bitmap remove "BMP_icon_"
+Y = Y + distance
+sleep time_sleep
+
+the_text$ = "bitmap get "+str$(icon_w)+", \"BMP_icon_\", \"/boot/apps/Internet/NetPositive\""
+text_w = 10 + draw get "text-width", the_text$, "Main_"
+X = (W/2) - ((icon_w+text_w)/2)
+draw text X+10+icon_w, Y+15, the_text$, "Main_"
+bitmap get icon_w, "BMP_icon_", "/boot/apps/Internet/NetPositive"
+draw bitmap X, Y, "BMP_icon_", "alpha", "Main_"
+bitmap remove "BMP_icon_"
+sleep 4*time_sleep
+
+for i = 1 to 27
+	window set "Main_", "resizeto", SCREEN_W, SCREEN_H-i
+	window set "Main_", "moveto", 0, i
+	sleep 0.03
+next i
+draw text 10, 20, "Kannst Fenster wieder zumachen und dir den code angucken :-)", "Main_"
+
+while (not instr(msg$, "Quit"))
+	msg$ = message$
+wend
+err = system("open \""+DIR_THIS$+APP_NAME$+"\"&")
+exit
+
+
+
