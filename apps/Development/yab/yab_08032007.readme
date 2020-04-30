@@ -1,0 +1,9 @@
+yab Install Package 08.03.2007 / ZETA
+
+yab Build 08. March. 2006
+
+This package install yab and the yab IDE on your ZETA System.
+
+Please check if you have installed ncurses on you system, because yab dont run without this libraries.
+
+You can donwload ncurses on you website http://www.besly.de from our download section.
